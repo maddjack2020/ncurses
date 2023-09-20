@@ -1,0 +1,31 @@
+#!/usr/bin/make -f
+SHELL = /bin/bash
+PATH := /opt/cross/bin:$(PATH)
+SYSROOT = /opt/cross/x86_64-xgcc-linux-gnu/sys-root
+CPLUS_INCLUDE_PATH = $(SYSROOT)/usr/include/c++/12/x86_64-xgcc-linux-gnu
+export CPLUS_INCLUDE_PATH := $(SYSROOT)/usr/include/c++/12:$(CPLUS_INCLUDE_PATH)
+CONFARGS = --host=x86_64-xgcc-linux-gnu --disable-stripping --enable-widec \
+    --mandir=/usr/share/man --with-cxx-shared --with-manpage-format=normal \
+    --with-shared --without-ada --without-debug --without-normal
+
+include /usr/share/dpkg/architecture.mk
+
+%:
+	dh $@ --without autoreconf
+
+override_dh_clean:
+	rm -fr build
+	dh_clean
+
+build/progs/tic:
+	mkdir -p build
+	cd build && ../configure
+	+$(MAKE) -C build/include
+	+$(MAKE) -C build/progs tic
+
+override_dh_auto_configure: build/progs/tic
+	dh_auto_configure -- $(CONFARGS)
+
+override_dh_auto_install:
+	dh_auto_install -- 'TIC_PATH=$(CURDIR)/build/progs/tic'
+	echo 'INPUT(-lncursesw)' > 'debian/ncurses/usr/lib/$(DEB_HOST_MULTIARCH)/libncurses.so'

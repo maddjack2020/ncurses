@@ -1,0 +1,18 @@
+Source: ncurses
+Section: unknown
+Priority: optional
+Maintainer: Jackson Hansen <madjack971@bsdmail.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.5.1
+Homepage: https://invisible-island.net/ncurses/
+Rules-Requires-Root: no
+Vcs-Git: https://github.com/maddjack2020/ncurses.git
+Vcs-Browser: https://github.com/maddjack2020/ncurses
+
+Package: ncurses
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: auto-generated package by debmake
+ The Ncurses package contains libraries for terminal-independent handling of
+ character screens.
